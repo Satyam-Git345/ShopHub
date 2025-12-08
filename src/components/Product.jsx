@@ -1,5 +1,6 @@
 import { useDispatch } from "react-redux";
 import { AddNewCartItem } from "../store/reducers/cartReducer";
+import { AddwishListTiem } from "../store/reducers/wishListReducer";
 
 export default function Product({ title, rating, price, image, id }) {
   const dispatch = useDispatch();
@@ -234,6 +235,9 @@ export default function Product({ title, rating, price, image, id }) {
           </button>
 
           <button
+             onClick={()=>{
+                dispatch(AddwishListTiem({title, rating, price, image, ProductID:id}));
+             }}
             style={{
               width: '100%',
               padding: '14px 24px',
@@ -259,7 +263,7 @@ export default function Product({ title, rating, price, image, id }) {
               e.currentTarget.style.boxShadow = 'none';
             }}
           >
-            Buy Now
+            Add to WishList
           </button>
         </div>
       </div>

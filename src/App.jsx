@@ -1,19 +1,24 @@
 import { useSelector } from "react-redux";
-import Product from "./components/Product";
+
 import Header from "./components/Header";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import WishList from "./components/WishList";
-import CartItems from "./components/CartItems";
+import { Route, Routes } from "react-router-dom";
+
 import ProductList from "./components/ProductList";
 import Cart from "./pages/Cart";
 import CheckoutPage from "./components/CheckutPage";
+import WishList from "./pages/WishList";
 
 const App = () => {
-  const cartCount = useSelector((s) => s.carts?.cartItems?.length);
-  const wishlistCount = useSelector((s) => s.wishlists?.wishList?.length);
+  const cartItems = useSelector((s) => s.carts?.cartItems);
+  const wishListItems = useSelector((s) => s.wishlists?.wishList);
 
-  console.log("cartCount", cartCount);
-  console.log("wishlistCount", wishlistCount);
+  const cartCount = cartItems.reduce((acc, curr) => {
+    return acc + curr.quanty;
+  }, 0);
+
+  const wishlistCount = wishListItems.reduce((acc, curr) => {
+    return acc + curr.quanty;
+  }, 0);
 
   return (
     <>

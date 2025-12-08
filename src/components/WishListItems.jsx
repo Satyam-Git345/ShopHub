@@ -1,11 +1,9 @@
-import {
-  decreaseCartItemQty,
-  increaseCartItemQty,
-} from "../store/reducers/cartReducer";
+
 import { useDispatch } from "react-redux";
 import { CartTotalSection } from "./CartTotalSection";
+import { decreaseWishlistQty, increaseWishlistQty } from "../store/reducers/wishListReducer";
 
-export default function CartItems({
+export default function WishListItems({
   title,
   rating,
   price,
@@ -15,11 +13,14 @@ export default function CartItems({
 }) {
   const dispatch = useDispatch();
   const ratingValue = typeof rating === "object" ? rating.rate : rating;
-
+   console.log( title,
+  rating,
+  price,
+  image,
+  quanty,
+  ProductID)
   return (
-    <div>
       <div
-        className="cart-item-container"
         style={{
           display: "grid",
           gridTemplateColumns: "2fr 1fr 1fr 1fr",
@@ -138,7 +139,7 @@ export default function CartItems({
           }}
         >
           <button
-            onClick={() => dispatch(decreaseCartItemQty(ProductID))}
+            onClick={() => dispatch(decreaseWishlistQty(ProductID))}
             style={{
               width: "32px",
               height: "32px",
@@ -178,7 +179,7 @@ export default function CartItems({
             {quanty}
           </span>
           <button
-            onClick={() => dispatch(increaseCartItemQty(ProductID))}
+            onClick={() => dispatch(increaseWishlistQty(ProductID))}
             style={{
               width: "32px",
               height: "32px",
@@ -223,6 +224,5 @@ export default function CartItems({
           ${quanty * price}
         </div>
       </div>
-    </div>
   );
 }

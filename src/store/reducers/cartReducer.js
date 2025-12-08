@@ -1,5 +1,4 @@
-
-import  {productsList} from "./Products";
+import { productsList } from "./Products";
 const initialState = {
   cartItems: [],
   products: productsList,
@@ -11,10 +10,9 @@ const DECREASECARTQTY = "cart/decreaseqty";
 
 //Action Creators
 export const increaseCartItemQty = (ProductID) => {
- 
   return {
     type: INCREASECARTQTY,
-    payload: { ProductID},
+    payload: { ProductID },
   };
 };
 export const decreaseCartItemQty = (ProductID) => {
@@ -24,7 +22,7 @@ export const decreaseCartItemQty = (ProductID) => {
   };
 };
 export const AddNewCartItem = (productData) => {
-  console.log("productData",productData)
+  console.log("productData", productData);
   return {
     type: ADDCARTITEM,
     payload: productData,
@@ -41,7 +39,6 @@ export const RemoveCartItem = (ProductID) => {
 export const cartReducer = (state = initialState, action) => {
   switch (action.type) {
     case ADDCARTITEM: {
-      console.log("cartReducerrrrrrr",action)
       const { ProductID } = action.payload;
       const itemInCart = state.cartItems.find(
         (cartItem) => cartItem.ProductID == ProductID
@@ -61,7 +58,7 @@ export const cartReducer = (state = initialState, action) => {
 
       return {
         ...state,
-        cartItems: [...state.cartItems, {...action.payload,quanty:1 }],
+        cartItems: [...state.cartItems, { ...action.payload, quanty: 1 }],
       };
     }
 
@@ -83,9 +80,7 @@ export const cartReducer = (state = initialState, action) => {
     }
 
     case INCREASECARTQTY: {
-      console.log("aaaaaaaaaaaaaaaaaaaaa")
       const { ProductID } = action.payload;
-      console.log("ProductID",action.payload)
       const found = state.cartItems.find(
         (cartitem) => cartitem.ProductID === ProductID
       );
@@ -105,7 +100,6 @@ export const cartReducer = (state = initialState, action) => {
         return state;
       }
     }
-
     case DECREASECARTQTY: {
       const { ProductID } = action.payload;
 
@@ -113,7 +107,7 @@ export const cartReducer = (state = initialState, action) => {
         (cartitem) => cartitem.ProductID === ProductID
       );
 
-      if (found && found.quanty > 0) {
+      if (found && found.quanty > 1) {
         return {
           ...state,
           cartItems: state.cartItems.map((cartitem) => {
@@ -123,17 +117,18 @@ export const cartReducer = (state = initialState, action) => {
             return cartitem;
           }),
         };
-      } else {
-        console.log("There is only one item in cart");
-        return state; 
+      } else if (found && found.quanty === 1) {
+        const remainingCartItems = state.cartItems.filter(
+          (cartitem) => cartitem.ProductID !== ProductID
+        );
+
+        return { ...state, cartItems: remainingCartItems };
       }
+
+      return state;
     }
 
     default:
       return state;
   }
 };
-
-
-
-

@@ -2,9 +2,10 @@ import React from "react";
 import CartItems from "../components/CartItems";
 import { useSelector } from "react-redux";
 import { CartTotalSection } from "../components/CartTotalSection";
+import WishListItems from "../components/WishListItems";
 
-export default function Cart() {
-  const cartItems = useSelector((s) => s.carts.cartItems);
+export default function WishList() {
+  const cartItems = useSelector((s) => s.wishlists.wishList);
   const total = cartItems.reduce((acc, curr) => {
     return acc + curr.price * curr.quanty;
   }, 0);
@@ -48,12 +49,12 @@ export default function Cart() {
           color: "blue",
         }}
       >
-        Items in Your Cart
+        Items in Your WishList
       </h2>
 
       <div className="cart-items-container">
         {cartItems.map(({ ProductID, title, rating, price, image, quanty }) => (
-          <CartItems
+          <WishListItems
             key={ProductID}
             title={title}
             price={price}
