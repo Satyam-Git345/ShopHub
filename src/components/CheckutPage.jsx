@@ -1,4 +1,10 @@
+import { useState } from "react";
+import Coupan from "../pages/Coupan";
+
 export default function CheckoutPage() {
+  const [discount, setDiscount] = useState(0);
+  const subtotal = 149.98; 
+  const total = subtotal + 10 + 15 - discount;
   return (
     <div style={{
       minHeight: '100vh',
@@ -412,7 +418,7 @@ export default function CheckoutPage() {
               </div>
             </div>
           </div>
-
+       <Coupan subtotal={subtotal} onApply={(d) => setDiscount(d)} />
           {/* Right Column - Order Summary */}
           <div style={{
             display: 'flex',
@@ -615,7 +621,7 @@ export default function CheckoutPage() {
                   WebkitTextFillColor: 'transparent',
                   backgroundClip: 'text',
                 }}>
-                  $174.98
+                  ${total.toFixed(2)}
                 </span>
               </div>
 

@@ -1,14 +1,23 @@
 import { useSelector } from "react-redux";
-
 import Header from "./components/Header";
 import { Route, Routes } from "react-router-dom";
+import { Suspense, lazy } from "react";
+import Loader from "./components/Loader";
 
-import ProductList from "./components/ProductList";
-import Cart from "./pages/Cart";
-import CheckoutPage from "./components/CheckutPage";
-import WishList from "./pages/WishList";
+// Lazy imports
+const ProductList = lazy(() => import("./components/ProductList"));
+const Cart = lazy(() => import("./pages/Cart"));
+const CheckoutPage = lazy(() => import("./components/CheckutPage"));
+const WishList = lazy(() => import("./pages/WishList"));
 
 const App = () => {
+  //extract full redux state
+  //1.
+  // useSelector((state)=>{
+  //     console.log("state",state)
+  // })
+  //2.
+  useSelector(console.log)
   const cartItems = useSelector((s) => s.carts?.cartItems);
   const wishListItems = useSelector((s) => s.wishlists?.wishList);
 
@@ -24,12 +33,14 @@ const App = () => {
     <>
       <Header cartCount={cartCount} wishlistCount={wishlistCount} />
 
-      <Routes>
-        <Route path="/" element={<ProductList />} />
-        <Route path="/wishlist" element={<WishList />} />
-        <Route path="/cartitems" element={<Cart />} />
-        <Route path="/checkoutpage" element={<CheckoutPage />} />
-      </Routes>
+      <Suspense fallback={<Loader/>}>
+        <Routes>
+          <Route path="/" element={<ProductList />} />
+          <Route path="/wishlist" element={<WishList />} />
+          <Route path="/cartitems" element={<Cart />} />
+          <Route path="/checkoutpage" element={<CheckoutPage />} />
+        </Routes>
+      </Suspense>
     </>
   );
 };

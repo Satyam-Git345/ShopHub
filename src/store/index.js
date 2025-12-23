@@ -1,13 +1,15 @@
 import { combineReducers, createStore } from "redux";
 
-import  {AddNewCartItem
+import {
+  AddNewCartItem
 } from "./reducers/cartReducer";
 import wishListReducer, {
   AddwishListTiem,
   RemovewishListTiem,
 } from "./reducers/wishListReducer";
 import productReducer from "./reducers/productReducer";
-import {cartReducer} from "./reducers/cartReducer";
+import { cartReducer } from "./reducers/cartReducer";
+import { produce } from "immer";
 
 const reducer = combineReducers({
   products: productReducer,
@@ -59,3 +61,49 @@ store.subscribe(() => {
 // store.dispatch(RemovewishListTiem(1));
 // store.dispatch(RemovewishListTiem(18));
 // console.log(store.getState());
+
+
+const users = [
+  {
+    name: "Satyam",
+    age: 22,
+  },
+  {
+    name: "Naman",
+    age: 28,
+  },
+  {
+    name: "Shivam",
+    age: 29,
+  },
+];
+
+
+// const modifiedUsers=users.map((user,i)=>{
+//      if(i==1){
+//          return {...user,age:12,name:'Satyam Shukla'}
+//      }
+//      else{
+//         return user
+//      }
+// })
+
+
+// console.log(modifiedUsers)
+
+
+
+const modifiedUsers=produce(users,(userCopy)=>{
+   userCopy[1].age=87
+   userCopy[1].name="Satyam Shukla"
+
+})
+
+console.log(modifiedUsers)
+
+
+
+
+
+
+

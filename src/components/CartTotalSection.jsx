@@ -120,7 +120,7 @@ export function CartTotalSection({ subtotal, tax, shipping, total }) {
           WebkitTextFillColor: 'transparent',
           backgroundClip: 'text',
         }}>
-          ${total || '0.00'}
+          ${total || '0.00'}ssss
         </span>
       </div>
 

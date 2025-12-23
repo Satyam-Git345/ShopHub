@@ -159,8 +159,6 @@ case REMOVE_COUPON: {
     discount: 0,
   };
 }
-
-
     default:
       return state;
   }
