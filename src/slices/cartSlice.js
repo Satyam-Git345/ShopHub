@@ -1,4 +1,6 @@
+import { createSlice } from "@reduxjs/toolkit";
 import { productsList } from "./Products";
+import { produce } from "immer";
 const initialState = {
   cartItems: [],
   products: productsList,
@@ -6,160 +8,121 @@ const initialState = {
   discount: 0,
 };
 
-const ADDCARTITEM = "cart/addItem";
-const REMOVECARTITEM = "cart/removeItem";
-const INCREASECARTQTY = "cart/increseqty";
-const DECREASECARTQTY = "cart/decreaseqty";
-const APPLY_COUPON = "cart/applyCoupon";
-const REMOVE_COUPON = "cart/removeCoupon";
+// export const cartReducer = (originalState = initialState, action) => {
+//   return produce(originalState, (state) => {
+//     switch (action.type) {
+//       case ADDCARTITEM: {
+//         const { ProductID } = action.payload;
+//         const itemInCartIndex = state.cartItems.findIndex(
+//           (cartItem) => cartItem.ProductID == ProductID
+//         );
+//         if (itemInCartIndex !== -1) {
+//           state.cartItems[itemInCartIndex].quanty += 1;
+//           break;
+//         } else {
+//           state.cartItems.push({ ...action.payload, quanty: 1 });
+//           break;
+//         }
+//       }
+//       case REMOVECARTITEM: {
+//         const { ProductID } = action.payload;
+//         const foundIndex = state.cartItems.findIndex(
+//           (cartitem) => cartitem.ProductID === ProductID
+//         );
+//         if (foundIndex !== -1) {
+//           return state.cartItems.splice(foundIndex, 1);
+//         }
+//         break;
+//       }
+//       case INCREASECARTQTY: {
+//         const { ProductID } = action.payload;
+//         const foundIndex = state.cartItems.findIndex(
+//           (cartitem) => cartitem.ProductID === ProductID
+//         );
+//         if (foundIndex !== -1) {
+//           state.cartItems[foundIndex].quanty += 1;
+//           break;
+//         } else {
+//           console.log("Item not prseent in cart");
+//           break;
+//         }
+//       }
+//       case DECREASECARTQTY: {
+//         const { ProductID } = action.payload;
+//         const foundIndex = state.cartItems.findIndex(
+//           (cartitem) => cartitem.ProductID === ProductID
+//         );
+//         if (foundIndex !== -1 && state.cartItems[foundIndex].quanty > 1) {
+//           state.cartItems[foundIndex].quanty -= 1;
+//           break;
+//         } else if (
+//           foundIndex !== -1 &&
+//           state.cartItems[foundIndex].quanty == 1
+//         ) {
+//           state.cartItems.splice(foundIndex, 1);
+//           break;
+//         }
+//         break;
+//       }
+//       case APPLY_COUPON: {
+//         return {
+//           ...state,
+//           appliedCoupon: action.payload.coupon,
+//           discount: action.payload.discount,
+//         };
+//       }
+//       case REMOVE_COUPON: {
+//         return {
+//           ...state,
+//           appliedCoupon: null,
+//           discount: 0,
+//         };
+//       }
+//     }
+//     return state;
+//   });
+// };
 
+const findCartItemIndex = (cartItems, ProductID) =>
+  cartItems.findIndex((cartItem) => cartItem.ProductID === ProductID);
 
-//Action Creators
-export const increaseCartItemQty = (ProductID) => {
-  return {
-    type: INCREASECARTQTY,
-    payload: { ProductID },
-  };
-};
-export const decreaseCartItemQty = (ProductID) => {
-  return {
-    type: DECREASECARTQTY,
-    payload: { ProductID },
-  };
-};
-export const AddNewCartItem = (productData) => {
-  console.log("productData", productData);
-  return {
-    type: ADDCARTITEM,
-    payload: productData,
-  };
-};
-
-export const RemoveCartItem = (ProductID) => {
-  return {
-    type: REMOVECARTITEM,
-    payload: { ProductID },
-  };
-};
-
-export const applyCoupon = (coupon, discount) => ({
-  type: APPLY_COUPON,
-  payload: { coupon, discount },
+const cartslice = createSlice({
+  name: "Cart",
+  initialState: initialState,
+  reducers: {
+    AddNewCartItem(state, action) {
+      const { ProductID } = action.payload;
+      const itemInCartIndex = findCartItemIndex(state.cartItems, ProductID);
+      if (itemInCartIndex !== -1) state.cartItems[itemInCartIndex].quanty += 1;
+      else state.cartItems.push({ ...action.payload, quanty: 1 });
+    },
+    RemoveCartItem(state, action) {
+      const { ProductID } = action.payload;
+      const foundIndex = findCartItemIndex(state.cartItems, ProductID);
+      if (foundIndex !== -1) return state.cartItems.splice(foundIndex, 1);
+    },
+    increaseCartItemQty(state, action) {
+      const { ProductID } = action.payload;
+      const foundIndex = findCartItemIndex(state.cartItems, ProductID);
+      if (foundIndex !== -1) state.cartItems[foundIndex].quanty += 1;
+      else console.log("Item not prseent in cart");
+    },
+    decreaseCartItemQty(state, action) {
+      const { ProductID } = action.payload;
+      const foundIndex = findCartItemIndex(state.cartItems, ProductID);
+      if (foundIndex !== -1 && state.cartItems[foundIndex].quanty > 1)
+        state.cartItems[foundIndex].quanty -= 1;
+      else if (foundIndex !== -1 && state.cartItems[foundIndex].quanty == 1)
+        state.cartItems.splice(foundIndex, 1);
+    },
+  },
 });
 
-export const removeCoupon = () => ({
-  type: REMOVE_COUPON,
-});
+export const {
+  AddNewCartItem,
+  RemoveCartItem,
+  increaseCartItemQty,
+  decreaseCartItemQty,
+} = cartslice.actions;
+export default cartslice.reducer;
 
-
-export const cartReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case ADDCARTITEM: {
-      const { ProductID } = action.payload;
-      const itemInCart = state.cartItems.find(
-        (cartItem) => cartItem.ProductID == ProductID
-      );
-
-      if (itemInCart) {
-        return {
-          ...state,
-          cartItems: state.cartItems.map((cartItem) => {
-            if (cartItem.ProductID === ProductID) {
-              return { ...cartItem, quanty: cartItem.quanty + 1 };
-            }
-            return cartItem;
-          }),
-        };
-      }
-
-      return {
-        ...state,
-        cartItems: [...state.cartItems, { ...action.payload, quanty: 1 }],
-      };
-    }
-
-    case REMOVECARTITEM: {
-      const { ProductID } = action.payload;
-
-      const found = state.cartItems.find(
-        (cartitem) => cartitem.ProductID === ProductID
-      );
-
-      if (found) {
-        const deleted = state.cartItems.filter(
-          (cartitem) => cartitem.ProductID !== ProductID
-        );
-        return { ...state, cartItems: deleted };
-      }
-
-      return state;
-    }
-
-    case INCREASECARTQTY: {
-      const { ProductID } = action.payload;
-      const found = state.cartItems.find(
-        (cartitem) => cartitem.ProductID === ProductID
-      );
-
-      if (found) {
-        return {
-          ...state,
-          cartItems: state.cartItems.map((cartitem) => {
-            if (cartitem.ProductID === ProductID) {
-              return { ...cartitem, quanty: cartitem.quanty + 1 };
-            }
-            return cartitem;
-          }),
-        };
-      } else {
-        console.log("Item not prseent in cart");
-        return state;
-      }
-    }
-    case DECREASECARTQTY: {
-      const { ProductID } = action.payload;
-
-      const found = state.cartItems.find(
-        (cartitem) => cartitem.ProductID === ProductID
-      );
-
-      if (found && found.quanty > 1) {
-        return {
-          ...state,
-          cartItems: state.cartItems.map((cartitem) => {
-            if (cartitem.ProductID === ProductID) {
-              return { ...cartitem, quanty: cartitem.quanty - 1 };
-            }
-            return cartitem;
-          }),
-        };
-      } else if (found && found.quanty === 1) {
-        const remainingCartItems = state.cartItems.filter(
-          (cartitem) => cartitem.ProductID !== ProductID
-        );
-
-        return { ...state, cartItems: remainingCartItems };
-      }
-
-      return state;
-    }
-
-    case APPLY_COUPON: {
-  return {
-    ...state,
-    appliedCoupon: action.payload.coupon,
-    discount: action.payload.discount,
-  };
-}
-
-case REMOVE_COUPON: {
-  return {
-    ...state,
-    appliedCoupon: null,
-    discount: 0,
-  };
-}
-    default:
-      return state;
-  }
-};

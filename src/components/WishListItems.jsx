@@ -1,7 +1,7 @@
 
 import { useDispatch } from "react-redux";
 import { CartTotalSection } from "./CartTotalSection";
-import { decreaseWishlistQty, increaseWishlistQty } from "../store/reducers/wishListReducer";
+import { decreaseWishlistQty, increaseWishlistQty } from "../ActionCreators/WishListActionCreators";
 
 export default function WishListItems({
   title,
@@ -139,7 +139,7 @@ export default function WishListItems({
           }}
         >
           <button
-            onClick={() => dispatch(decreaseWishlistQty(ProductID))}
+            onClick={() => dispatch(decreaseWishlistQty({ProductID}))}
             style={{
               width: "32px",
               height: "32px",

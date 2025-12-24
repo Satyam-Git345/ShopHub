@@ -1,7 +1,4 @@
-import {
-  decreaseCartItemQty,
-  increaseCartItemQty,
-} from "../store/reducers/cartReducer";
+import { increaseCartItemQty, decreaseCartItemQty } from "../slices/cartSlice";
 import { useDispatch } from "react-redux";
 import { CartTotalSection } from "./CartTotalSection";
 
@@ -120,7 +117,7 @@ export default function CartItems({
             textAlign: "center",
           }}
         >
-          ${price}
+          ${Number(price).toFixed(3)}
         </div>
 
         <div
@@ -138,7 +135,7 @@ export default function CartItems({
           }}
         >
           <button
-            onClick={() => dispatch(decreaseCartItemQty(ProductID))}
+            onClick={() => dispatch(decreaseCartItemQty({ ProductID }))}
             style={{
               width: "32px",
               height: "32px",
@@ -178,7 +175,7 @@ export default function CartItems({
             {quanty}
           </span>
           <button
-            onClick={() => dispatch(increaseCartItemQty(ProductID))}
+            onClick={() => dispatch(increaseCartItemQty({ ProductID }))}
             style={{
               width: "32px",
               height: "32px",

@@ -1,14 +1,7 @@
 import { combineReducers, createStore } from "redux";
-
-import {
-  AddNewCartItem
-} from "./reducers/cartReducer";
-import wishListReducer, {
-  AddwishListTiem,
-  RemovewishListTiem,
-} from "./reducers/wishListReducer";
-import productReducer from "./reducers/productReducer";
-import { cartReducer } from "./reducers/cartReducer";
+import wishListReducer from "../slices/wishListSlice";
+import productReducer from "../slices/productSlice";
+import cartReducer  from "../slices/cartSlice";
 import { produce } from "immer";
 
 const reducer = combineReducers({
