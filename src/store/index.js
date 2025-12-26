@@ -1,19 +1,56 @@
-import { combineReducers, createStore } from "redux";
+import { combineReducers } from "redux";
 import wishListReducer from "../slices/wishListSlice";
 import productReducer from "../slices/productSlice";
-import cartReducer  from "../slices/cartSlice";
+import cartReducer from "../slices/cartSlice";
 import { produce } from "immer";
+import { configureStore } from "@reduxjs/toolkit";
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
-const reducer = combineReducers({
+import {
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
+import { logger } from "../middleware/Logger";
+
+const persistConfig = {
+  key: "root",
+  storage,
+  whitelist: ["carts", "wishlists"], // persist only these
+};
+
+
+const rootReducer = combineReducers({
   products: productReducer,
   wishlists: wishListReducer,
   carts: cartReducer,
 });
 
-export const store = createStore(
-  reducer,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-);
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+
+
+export const store = configureStore({
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [
+          FLUSH,
+          REHYDRATE,
+          PAUSE,
+          PERSIST,
+          PURGE,
+          REGISTER,
+        ],
+      },
+    }).concat(logger),
+});
+
 
 console.log("store", store);
 
@@ -55,7 +92,6 @@ store.subscribe(() => {
 // store.dispatch(RemovewishListTiem(18));
 // console.log(store.getState());
 
-
 const users = [
   {
     name: "Satyam",
@@ -71,7 +107,6 @@ const users = [
   },
 ];
 
-
 // const modifiedUsers=users.map((user,i)=>{
 //      if(i==1){
 //          return {...user,age:12,name:'Satyam Shukla'}
@@ -81,22 +116,16 @@ const users = [
 //      }
 // })
 
-
 // console.log(modifiedUsers)
 
+const modifiedUsers = produce(users, (userCopy) => {
+  userCopy[1].age = 87;
+  userCopy[1].name = "Satyam Shukla";
+});
+
+console.log(modifiedUsers);
 
 
-const modifiedUsers=produce(users,(userCopy)=>{
-   userCopy[1].age=87
-   userCopy[1].name="Satyam Shukla"
-
-})
-
-console.log(modifiedUsers)
-
-
-
-
-
+export const persistor = persistStore(store);
 
 

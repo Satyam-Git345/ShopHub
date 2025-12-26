@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { productsList } from "./Products";
-import { produce } from "immer";
 const initialState = {
   cartItems: [],
   products: productsList,
@@ -84,7 +83,7 @@ const initialState = {
 // };
 
 const findCartItemIndex = (cartItems, ProductID) =>
-  cartItems.findIndex((cartItem) => cartItem.ProductID === ProductID);
+cartItems.findIndex((cartItem) => cartItem.ProductID === ProductID);
 
 const cartslice = createSlice({
   name: "Cart",
