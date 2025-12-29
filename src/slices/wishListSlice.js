@@ -10,63 +10,70 @@ let initialState = {
   wishList: [],
 };
 
-const wishListReducer = (originalState = initialState, action) => {
-  return produce(originalState, (state) => {
+const wishListReducer = (originalState = initialState, action) =>
+  produce(originalState, (state) => {
     switch (action.type) {
       case ADDWISHLISTITEM: {
-        console.log("action.payload", action.payload);
         const { ProductID } = action.payload;
-        const itemInwishlistindex = state.wishList.findIndex(
-          (cartItem) => cartItem.ProductID == ProductID
+
+        const index = state.wishList.findIndex(
+          (item) => item.ProductID === ProductID
         );
-        if (itemInwishlistindex !== -1) {
-          state.wishList[itemInwishlistindex].quanty += 1;
-          break;
+
+        if (index !== -1) {
+          state.wishList[index].quanty += 1;
         } else {
           state.wishList.push({ ...action.payload, quanty: 1 });
-          break;
-        }
-      }
-      case REMOVEWISHLISTITEM: {
-        const { ProductID } = action.payload;
-        const found = state.wishList.findIndex(
-          (cartitem) => cartitem.ProductID === ProductID
-        );
-        if (found !== -1) {
-          return wishList.splice(found, 1);
         }
         break;
       }
-      case INCREASEWISHLISTQTY: {
+
+      case REMOVEWISHLISTITEM: {
         const { ProductID } = action.payload;
-        const found = state.wishList.findIndex(
-          (cartitem) => cartitem.ProductID === ProductID
+
+        const index = state.wishList.findIndex(
+          (item) => item.ProductID === ProductID
         );
 
-        if (found !== -1) {
-          state.wishList[found].quanty += 1;
-          break;
-        } else {
-          console.log("Item not prseent in cart");
-          break;
+        if (index !== -1) {
+          state.wishList.splice(index, 1);
         }
+        break;
       }
+
+      case INCREASEWISHLISTQTY: {
+        const { ProductID } = action.payload;
+
+        const index = state.wishList.findIndex(
+          (item) => item.ProductID === ProductID
+        );
+
+        if (index !== -1) {
+          state.wishList[index].quanty += 1;
+        }
+        break;
+      }
+
       case DECREASEWISHLISTQTY: {
         const { ProductID } = action.payload;
-        const found = state.wishList.findIndex(
-          (cartitem) => cartitem.ProductID === ProductID
+
+        const index = state.wishList.findIndex(
+          (item) => item.ProductID === ProductID
         );
-        if (found !== -1 && state.wishList[found].quanty > 1) {
-          state.wishList[found].quanty -= 1;
-          break;
-        } else if (found !== -1 && state.wishList[found].quanty == 1) {
-          state.wishList.splice(found, 1);
-          break;
+
+        if (index !== -1) {
+          if (state.wishList[index].quanty > 1) {
+            state.wishList[index].quanty -= 1;
+          } else {
+            state.wishList.splice(index, 1);
+          }
         }
+        break;
       }
+
+      default:
+        break;
     }
-    return state;
   });
-};
 
 export default wishListReducer;

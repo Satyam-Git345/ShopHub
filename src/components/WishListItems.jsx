@@ -139,7 +139,7 @@ export default function WishListItems({
           }}
         >
           <button
-            onClick={() => dispatch(decreaseWishlistQty({ProductID}))}
+            onClick={() => dispatch(decreaseWishlistQty(ProductID))}
             style={{
               width: "32px",
               height: "32px",

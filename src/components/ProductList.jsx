@@ -17,7 +17,7 @@ const ProductList = () => {
   useEffect(() => {
     dispatch(fetchProductsState());
     const fetchProducts = () => {
-      fetch("https://fakestoreapi.com/products")
+      fetch("http://localhost:4000/")
         .then((response) => {
           return response.json();
         })

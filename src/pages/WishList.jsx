@@ -6,10 +6,6 @@ import WishListItems from "../components/WishListItems";
 
 export default function WishList() {
   const cartItems = useSelector((s) => s.wishlists.wishList);
-  const total = cartItems.reduce((acc, curr) => {
-    return acc + curr.price * curr.quanty;
-  }, 0);
-
   if (cartItems.length === 0) {
     return (
       <div style={{
@@ -64,9 +60,6 @@ export default function WishList() {
             ProductID={ProductID}
           />
         ))}
-      </div>
-      <div>
-        <CartTotalSection total={total.toFixed(3)} />
       </div>
     </div>
   );
