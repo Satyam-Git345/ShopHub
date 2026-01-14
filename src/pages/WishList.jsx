@@ -1,11 +1,11 @@
 import React from "react";
-import CartItems from "../components/CartItems";
 import { useSelector } from "react-redux";
-import { CartTotalSection } from "../components/CartTotalSection";
 import WishListItems from "../components/WishListItems";
+import { getAllWishListItems } from "../slices/wishListSlice";
+
 
 export default function WishList() {
-  const cartItems = useSelector((s) => s.wishlists.wishList);
+  const cartItems = useSelector(getAllWishListItems);
   if (cartItems.length === 0) {
     return (
       <div style={{

@@ -5,6 +5,7 @@ import {
   INCREASEWISHLISTQTY,
   REMOVEWISHLISTITEM,
 } from "../ActionCreators/WishListActionCreators";
+import { createSelector } from "@reduxjs/toolkit";
 
 let initialState = {
   wishList: [],
@@ -75,5 +76,26 @@ const wishListReducer = (originalState = initialState, action) =>
         break;
     }
   });
+
+
+const getWishListItems = (s) => {
+  const cartItems = s.wishlists?.wishList;
+  const products = s.products?.products;
+
+  return products
+    .filter((product) =>
+      cartItems.some((cartitem) => cartitem.ProductID === product.id)
+    )
+    .map((item) => {
+      const found = cartItems.find(
+        (cartitem) => cartitem.ProductID === item.id
+      );
+      return { ...item, quanty: found.quanty };
+    });
+};
+//memoize a selecter that return new state using createSelector
+export const getAllWishListItems = createSelector(getWishListItems, (state) => state);
+
+
 
 export default wishListReducer;

@@ -18,7 +18,6 @@ export const decreaseCartItemQty = (ProductID) => {
   };
 };
 export const AddNewCartItem = (productData) => {
-  console.log("productData", productData);
   return {
     type: ADDCARTITEM,
     payload: productData,

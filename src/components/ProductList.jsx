@@ -2,33 +2,44 @@ import { useEffect, useState } from "react";
 import Product from "./Product";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  updateAllProducts,
-  fetchProductsState,
-  fetchProductsError,
+  getAllProducts,
+  getProductLoading,
+  getProductError,
+  fetchProductsData,
 } from "../slices/productSlice";
 import Loader from "./Loader";
 
 const ProductList = () => {
   const dispatch = useDispatch();
-  const products = useSelector((s) => s?.products?.products);
-  const isLoading = useSelector((s) => s?.products?.loading);
-  const error = useSelector((s) => s?.products?.error);
+  const products = useSelector(getAllProducts);
+  const isLoading = useSelector(getProductLoading);
+  const error = useSelector(getProductError);
 
   useEffect(() => {
-    dispatch(fetchProductsState());
-    const fetchProducts = () => {
-      fetch("http://localhost:4000/")
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          dispatch(updateAllProducts(data));
-        })
-        .catch((err) => {
-          dispatch(fetchProductsError("Something Went Wrong..."));
-        });
-    };
-    fetchProducts();
+    // dispatch(
+    //   fetchData({
+    //     URL: "products",
+    //     onSuccess: updateAllProducts.type,
+    //     onStart: fetchProductsState.type,
+    //     onError: fetchProductsError.type,
+    //   })
+    // );
+    // dispatch(fetchProductsState());
+    // const fetchProducts = () => {
+    //   fetch("http://localhost:4000/")
+    //     .then((response) => {
+    //       return response.json();
+    //     })
+    //     .then((data) => {
+    //       dispatch(updateAllProducts(data));
+    //     })
+    //     .catch((err) => {
+    //       dispatch(fetchProductsError("Something Went Wrong..."));
+    //     });
+    // };
+    // fetchProducts();
+
+    dispatch(fetchProductsData());
   }, []);
 
   return (

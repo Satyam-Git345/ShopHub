@@ -228,7 +228,7 @@ export default function Product({ title, rating, price, image, id }) {
               e.currentTarget.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.4)';
             }}
             onClick={() => {
-              dispatch(AddNewCartItem({title, rating, price, image, ProductID:id}));
+              dispatch(AddNewCartItem({ProductID:id}));
             }}
           >
             Add to Cart
@@ -236,7 +236,7 @@ export default function Product({ title, rating, price, image, id }) {
 
           <button
              onClick={()=>{
-                dispatch(AddwishListTiem({title, rating, price, image, ProductID:id}));
+                dispatch(AddwishListTiem({ProductID:id}));
              }}
             style={{
               width: '100%',

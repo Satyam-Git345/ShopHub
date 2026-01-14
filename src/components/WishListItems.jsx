@@ -9,16 +9,10 @@ export default function WishListItems({
   price,
   image,
   quanty,
-  ProductID,
+  id
 }) {
   const dispatch = useDispatch();
   const ratingValue = typeof rating === "object" ? rating.rate : rating;
-   console.log( title,
-  rating,
-  price,
-  image,
-  quanty,
-  ProductID)
   return (
       <div
         style={{
@@ -139,7 +133,7 @@ export default function WishListItems({
           }}
         >
           <button
-            onClick={() => dispatch(decreaseWishlistQty(ProductID))}
+            onClick={() => dispatch(decreaseWishlistQty({ProductID}))}
             style={{
               width: "32px",
               height: "32px",
@@ -179,7 +173,7 @@ export default function WishListItems({
             {quanty}
           </span>
           <button
-            onClick={() => dispatch(increaseWishlistQty(ProductID))}
+            onClick={() => dispatch(increaseWishlistQty({ProductID}))}
             style={{
               width: "32px",
               height: "32px",

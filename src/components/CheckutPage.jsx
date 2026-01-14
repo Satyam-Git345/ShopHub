@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Razorpay } from "Razorpay";
+import openRazorPayPopup from "../utils/openRazorpaypopup";
+import { getAllCartItems } from "../slices/cartSlice";
+import api from "../api/api";
 
 
 
@@ -21,7 +25,8 @@ export const checkoutSchema = Yup.object({
 });
 
 export default function CheckoutPage() {
-  const cartItems = useSelector((s) => s.carts.cartItems);
+  const navigate = useNavigate();
+  const cartItems = useSelector(getAllCartItems);
   const Carttotal = cartItems.reduce((acc, curr) => {
     return acc + curr.price * curr.quanty;
   }, 0);
@@ -57,25 +62,26 @@ export default function CheckoutPage() {
     const { fullName, email, phone } = formik.values;
     const user = { name: fullName.trim(), mobile: phone.trim(), email: email };
     const payload = {
-      items: cartItems,
+      course: cartItems,
       user,
       cartAlltotal: parseInt(cartAlltotal),
     };
-    const response = await fetch("http://localhost:4000/create-order", {
-      method: "POST",
-      body: JSON.stringify(payload),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const order = await response.json();
-    console.log("response of create order", order);
+    try {
+      const response = await api.post("/create-order", payload);
+      const order = response.data;
+      console.log("response of create order", order);
+      openRazorPayPopup(order.orderId, user, cartItems, cartAlltotal, navigate);
+    } catch (error) {
+      console.error("Order creation failed:", error);
+    }
     // if(order.status==="Failed"){
     //     alert("Cource Already purcheshed");
     // }
 
     // else{
-    openRazorPayPopup(order.orderId, user, cartItems, cartAlltotal);
+    // else{
+    openRazorPayPopup(order.orderId, user, cartItems, cartAlltotal, navigate);
+    // }
     // }
   };
   return (
@@ -595,55 +601,4 @@ export default function CheckoutPage() {
     </form>
   );
 }
-const openRazorPayPopup = (orderId, user, cartItems, cartAlltotal) => {
-  console.log("In openRazorPayPopup");
-  console.log("user", user);
-  const rzp = new window.Razorpay({
-    key: "rzp_test_Rqbeszfqh8aoAV",
-    amount: cartAlltotal * 100,
-    name: user.name,
-    order_id: orderId,
-    // image: '../ass',
-    theme: {
-      color:"#E7E7E7"
-    },
-    prefill: {
-      name: user.name,
-      contact: user.mobile,
-      email: user.email,
-    },
-    notes: {
-      items: cartItems,
-    },
-    handler: async (response) => {
-      console.log("complete-order response", response);
-      const payload = {
-        orderId: response.razorpay_order_id,
-        items: items,
-        user: user,
-      };
-      const comorderResponse = await fetch(
-        "http://localhost:4000/complete-order",
-        {
-          method: "POST",
-          body: JSON.stringify(payload),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const order = await comorderResponse.json();
-      console.log("complete-order", order);
-      if (order.status === "success") {
-        onClose();
-        alert("Payment Successfull");
-      } else {
-        alert("Payment Failed");
-      }
-    },
-  });
-  rzp.on("payment.failed", function (response) {
-    console.log(response);
-  });
-  rzp.open();
-};
+

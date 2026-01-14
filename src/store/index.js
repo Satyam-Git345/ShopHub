@@ -2,6 +2,7 @@ import { combineReducers } from "redux";
 import wishListReducer from "../slices/wishListSlice";
 import productReducer from "../slices/productSlice";
 import cartReducer from "../slices/cartSlice";
+import userReducer from "../slices/userSlice";
 import { produce } from "immer";
 import { configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
@@ -15,12 +16,13 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist";
-import { logger } from "../middleware/Logger";
+import { apiMiddleware } from "../middleware/apiMiddleware";
+import { func } from "../middleware/func";
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["carts", "wishlists"], // persist only these
+  whitelist: ["carts", "wishlists", "user"], // persist only these
 };
 
 
@@ -28,11 +30,10 @@ const rootReducer = combineReducers({
   products: productReducer,
   wishlists: wishListReducer,
   carts: cartReducer,
+  user: userReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
-
-
 
 export const store = configureStore({
   reducer: persistedReducer,
@@ -48,12 +49,8 @@ export const store = configureStore({
           REGISTER,
         ],
       },
-    }).concat(logger),
+    }).concat(apiMiddleware, func),
 });
-
-
-console.log("store", store);
-
 store.subscribe(() => {
   console.log("State", store.getState());
 });

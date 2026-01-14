@@ -11,13 +11,16 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.11.2",
+    "axios": "^1.13.2",
     "formik": "^2.4.9",
     "immer": "^11.1.0",
+    "lucide-react": "^0.562.0",
     "razorpay": "^2.9.6",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-redux": "^9.2.0",
     "react-router-dom": "^6.30.2",
+    "react-toastify": "^11.0.5",
     "redux": "^5.0.1",
     "redux-persist": "^6.0.0",
     "yup": "^1.7.1"

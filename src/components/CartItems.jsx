@@ -8,7 +8,7 @@ export default function CartItems({
   price,
   image,
   quanty,
-  ProductID,
+  id,
 }) {
   const dispatch = useDispatch();
   const ratingValue = typeof rating === "object" ? rating.rate : rating;
@@ -135,7 +135,7 @@ export default function CartItems({
           }}
         >
           <button
-            onClick={() => dispatch(decreaseCartItemQty({ ProductID }))}
+            onClick={() => dispatch(decreaseCartItemQty({ id }))}
             style={{
               width: "32px",
               height: "32px",
@@ -175,7 +175,7 @@ export default function CartItems({
             {quanty}
           </span>
           <button
-            onClick={() => dispatch(increaseCartItemQty({ ProductID }))}
+            onClick={() => dispatch(increaseCartItemQty({ id }))}
             style={{
               width: "32px",
               height: "32px",
